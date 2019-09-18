@@ -18,22 +18,22 @@ namespace FR.Infrastructure.Repositories
             _context = context;
         }
 
-        public void Add(T value)
+        public int Add(T value)
         {
             _context.Add(value);
-            _context.SaveChanges();
+            return _context.SaveChanges();
         }
 
-        public void AddRange(IEnumerable<T> values)
+        public int AddRange(IEnumerable<T> values)
         {
             _context.AddRange(values);
-            _context.SaveChanges();
+            return _context.SaveChanges();
         }
 
-        public void Remove(T value)
+        public int Remove(T value)
         {
             _context.Remove(value);
-            _context.SaveChanges();
+            return _context.SaveChanges();
         }
 
         public T Get(object id, params Expression<Func<T, dynamic>>[] includes)
@@ -61,10 +61,10 @@ namespace FR.Infrastructure.Repositories
             return set;
         }
 
-        public void Update(T value)
+        public int Update(T value)
         {
             _context.Update(value);
-            _context.SaveChanges();
+            return _context.SaveChanges();
         }
 
         public void Dispose()

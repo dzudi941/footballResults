@@ -11,13 +11,11 @@ namespace FR.Api.Controllers
     {
         private GroupService _groupService;
         private ResultsService _resultsService;
-        //private TeamService _teamService;
 
-        public ResultsController(GroupService groupService, ResultsService resultsService/*, TeamService teamService*/)
+        public ResultsController(GroupService groupService, ResultsService resultsService)
         {
             _groupService = groupService;
             _resultsService = resultsService;
-            //_teamService = teamService;
         }
 
         // GET: api/Results
@@ -27,6 +25,7 @@ namespace FR.Api.Controllers
             return Ok(_resultsService.Get());
         }
 
+        // GET: api/Results/5
         [HttpGet("{id}", Name = "Get")]
         public ActionResult<ResultViewModel> Get(int id)
         {
@@ -38,23 +37,40 @@ namespace FR.Api.Controllers
 
         // POST: api/Results
         [HttpPost]
+        public ActionResult<IEnumerable<GroupViewModel>> Post(ResultViewModel resultVM)
+        {
+            int groupId = _groupService.AddGroup(resultVM.Group, resultVM.LeagueTitle);
+            bool sucessfulyAdded = _resultsService.AddResult(groupId, resultVM) > 0;
+            var groupsVM = _groupService.Get();
+
+            return sucessfulyAdded ? (ActionResult)Ok(groupsVM) : BadRequest();
+        }
+
+        // POST: api/Results/Multiple
+        [HttpPost("Multiple")]
         public ActionResult<IEnumerable<GroupViewModel>> Post(List<ResultViewModel> resultsVM)
         {
+            int totalAddedResults = 0;
             foreach (var resultVM in resultsVM)
             {
                 int groupId = _groupService.AddGroup(resultVM.Group, resultVM.LeagueTitle);
-
-                _resultsService.AddResult(groupId, resultVM);
+                totalAddedResults += _resultsService.AddResult(groupId, resultVM);
             }
 
-            return Ok(_groupService.Get());
+            var groupsVM = _groupService.Get();
+            bool allAdded = totalAddedResults == resultsVM.Count;
+
+            return allAdded ? (ActionResult)Ok(groupsVM) : BadRequest();
         }
 
         // PUT: api/Results/5
         [HttpPut("{id}")]
-        public void Put(int id, ResultViewModel resultVM)
+        public ActionResult Put(int id, ResultViewModel resultVM)
         {
-            _resultsService.Update(id, resultVM);
+            int groupId = _groupService.AddGroup(resultVM.Group, resultVM.LeagueTitle);
+            bool updated = _resultsService.Update(id, groupId, resultVM);
+
+            return updated ? (ActionResult)Ok() : BadRequest();
         }
 
         //// POST: api/Results/
@@ -66,13 +82,15 @@ namespace FR.Api.Controllers
 
         // DELETE: api/Results/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public ActionResult Delete(int id)
         {
-            _resultsService.Delete(id);
+            if (_resultsService.Delete(id))
+                return Ok();
+            else
+                return BadRequest();
         }
 
         // POST: api/Results/Filter
-        //[Route("api/[controller]/Filter")]
         [HttpPost("Filter")]
         public ActionResult<IEnumerable<ResultViewModel>> Filter(FilterViewModel filter)
         {

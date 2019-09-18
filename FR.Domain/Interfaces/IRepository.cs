@@ -10,9 +10,9 @@ namespace FR.Domain.Interfaces
         T Get(object id, params Expression<Func<T, dynamic>>[] includes);
         IEnumerable<T> Get(params Expression<Func<T, dynamic>>[] includes);
         IEnumerable<T> Find(ISpecification<T> specification, params Expression<Func<T, dynamic>>[] includes);
-        void Add(T value);
-        void AddRange(IEnumerable<T> values);
-        void Update(T value);
-        void Remove(T value);
+        int Add(T value);
+        int AddRange(IEnumerable<T> values);
+        int Update(T value);
+        int Remove(T value);
     }
 }

@@ -23,7 +23,7 @@ namespace FR.Api.Services
             //_teamRepository = teamRepository;
         }
 
-        internal void AddResult(int groupId, ResultViewModel resultVM)
+        internal int AddResult(int groupId, ResultViewModel resultVM)
         {
             string[] score = resultVM.Score.Split(':');
             int homeTeamGoals = int.Parse(score[0]);
@@ -41,7 +41,7 @@ namespace FR.Api.Services
                 AwayTeamGoals = awayTeamGoals
             };
 
-            _resultsRepository.Add(result);
+            return _resultsRepository.Add(result);
         }
 
         internal IEnumerable<ResultViewModel> Filter(FilterViewModel filter)
@@ -58,29 +58,31 @@ namespace FR.Api.Services
             return results.Select(x => new ResultViewModel(x));//.GroupBy(x=> x.Group).Select(x => new GroupViewModel(x.Key.Name, x.Key.LeagueTitle, x.ToList()));
         }
 
-        public void Update(int id, ResultViewModel resultVM)
+        public bool Update(int id, int groupId, ResultViewModel resultVM)
         {
             Result result = _resultsRepository.Get(id);
+            if (result == null) return false;
+
             result.LeagueTitle = resultVM.LeagueTitle;
             result.Matchday = resultVM.Matchday;
-            result.Group = _groupRepository.Find(new GroupSpecification(resultVM.Group)).First();
+            result.Group = _groupRepository.Get(groupId);
             result.HomeTeam = resultVM.HomeTeam;//_teamRepository.Find(new TeamSpecification(resultVM.HomeTeam)).First();
             result.AwayTeam = resultVM.AwayTeam;//_teamRepository.Find(new TeamSpecification(resultVM.AwayTeam)).First();
             result.KickoffAt = resultVM.KickoffAt;
             result.HomeTeamGoals = resultVM.HomeTeamGoals;
             result.AwayTeamGoals = resultVM.AwayTeamGoals;
 
-            _resultsRepository.Update(result);
+            return _resultsRepository.Update(result) > 0;
         }
 
         public void Update(List<int> ids, List<ResultViewModel> resultsVM)
         {
-            if (ids.Count != resultsVM.Count) return;
+            //if (ids.Count != resultsVM.Count) return;
 
-            for (int i = 0; i < ids.Count; i++)
-            {
-                Update(ids[i], resultsVM[i]);
-            }
+            //for (int i = 0; i < ids.Count; i++)
+            //{
+            //    Update(ids[i], resultsVM[i]);
+            //}
         }
 
         public IEnumerable<ResultViewModel> Get()
@@ -96,9 +98,9 @@ namespace FR.Api.Services
             return new ResultViewModel(result);
         }
 
-        public void Delete(int id)
+        public bool Delete(int id)
         {
-            _resultsRepository.Remove(_resultsRepository.Get(id));
+            return _resultsRepository.Remove(_resultsRepository.Get(id)) > 0;
         }
     }
 }
