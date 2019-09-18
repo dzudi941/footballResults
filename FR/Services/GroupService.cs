@@ -31,6 +31,21 @@ namespace FR.Api.Services
             return groups.Select(x => CreateGroupVM(x));
         }
 
+        public int AddGroup(string name, string leagueName)
+        {
+            Group group = _groupRepository.Find(new GroupSpecification(name)).FirstOrDefault();
+            if (group != null) return group.Id;
+
+            Group newGroup = new Group
+            {
+                Name = name,
+                LeagueTitle = leagueName
+            };
+
+            _groupRepository.Add(newGroup);
+            return _groupRepository.Find(new GroupSpecification(name)).First().Id;
+        }
+
         private GroupViewModel CreateGroupVM(Group group)
         {
             if (group == null) return null;
@@ -82,10 +97,17 @@ namespace FR.Api.Services
             items.Sort((a, b) => {
                 if (a.Points > b.Points) return 1;
                 else if (a.Points < b.Points) return -1;
+                else if (a.Goals > b.Goals) return 1;
+                else if (a.Goals < b.Goals) return -1;
                 else if (a.GoalDifference > b.GoalDifference) return 1;
                 else if (a.GoalDifference < b.GoalDifference) return -1;
                 else return 0;
             });
+
+            for (int i = 0; i < items.Count; i++)
+            {
+                items[i].Rank = i + 1;
+            }
 
             return items;
         }

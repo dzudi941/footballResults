@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using FR.Api.Services;
 using FR.Api.ViewModels;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FR.Api.Controllers
@@ -12,25 +9,45 @@ namespace FR.Api.Controllers
     [ApiController]
     public class ResultsController : ControllerBase
     {
-        // GET: api/Results
-        [HttpGet]
-        public IEnumerable<string> Get()
+        private GroupService _groupService;
+        private ResultsService _resultsService;
+        private TeamService _teamService;
+
+        public ResultsController(GroupService groupService, ResultsService resultsService, TeamService teamService)
         {
-            return new string[] { "value1", "value2" };
+            _groupService = groupService;
+            _resultsService = resultsService;
+            _teamService = teamService;
         }
 
-        // GET: api/Results/5
-        [HttpGet("{id}", Name = "Get")]
-        public string Get(int id)
+        // GET: api/Results
+        [HttpGet]
+        public IEnumerable<GroupViewModel> Get()
         {
-            return "value";
+            return _groupService.GetTables();
+        }
+
+        // GET: api/Results/A
+        [HttpGet("{groupName}", Name = "Get")]
+        public GroupViewModel Get(string groupName)
+        {
+            return _groupService.GetTable(groupName);
         }
 
         // POST: api/Results
         [HttpPost]
-        public void Post(List<ResultViewModel> results)
+        public IEnumerable<GroupViewModel> Post(List<ResultViewModel> resultsVM)
         {
-            var aa = results;
+            foreach (var resultVM in resultsVM)
+            {
+                int groupId = _groupService.AddGroup(resultVM.Group, resultVM.LeagueTitle);
+                int homeTeamId = _teamService.AddTeam(resultVM.HomeTeam);
+                int awayTeamId = _teamService.AddTeam(resultVM.AwayTeam);
+
+                _resultsService.AddResult(groupId, homeTeamId, awayTeamId, resultVM);
+            }
+
+            return _groupService.GetTables();
         }
 
         // PUT: api/Results/5
@@ -45,10 +62,12 @@ namespace FR.Api.Controllers
         {
         }
 
-        [HttpPost("PostResults")]
-        public void PostResults(List<ResultViewModel> results)
+        // GET: api/Results/A
+        [HttpGet("{startDate/endDate/groupName/teamName}", Name = "Filter")]
+        public IEnumerable<GroupViewModel> Filter(string startDate, string endDate, string groupName, string teamName)
         {
-            var aa = results;
+            //return _groupService.GetTable(groupName);
+            return null;
         }
     }
 }
