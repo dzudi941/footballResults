@@ -40,8 +40,8 @@ namespace FR.Api.ViewModels
             LeagueTitle = result.LeagueTitle;
             Matchday = result.Matchday;
             Group = result.Group.Name;
-            HomeTeam = result.HomeTeam.Name;
-            AwayTeam = result.AwayTeam.Name;
+            HomeTeam = result.HomeTeam;
+            AwayTeam = result.AwayTeam;
             KickoffAt = result.KickoffAt;
             _homeTeamGoals = result.HomeTeamGoals;
             _awayTeamGoals = result.AwayTeamGoals;

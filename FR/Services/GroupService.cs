@@ -20,7 +20,7 @@ namespace FR.Api.Services
         {
             Group group = _groupRepository.Find(new GroupSpecification(groupName)).FirstOrDefault();
 
-            return CreateGroupVM(group);
+            return new GroupViewModel(group);
         }
 
         public IEnumerable<GroupViewModel> GetTables()
@@ -28,7 +28,7 @@ namespace FR.Api.Services
             List<GroupViewModel> groupsVM = new List<GroupViewModel>();
             var groups = _groupRepository.Get();
 
-            return groups.Select(x => CreateGroupVM(x));
+            return groups.Select(x => new GroupViewModel(x));
         }
 
         public int AddGroup(string name, string leagueName)

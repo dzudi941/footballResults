@@ -17,13 +17,13 @@ namespace FR.Api.Controllers
     {
         private GroupService _groupsService;
         private ResultsService _resultsService;
-        private TeamService _teamsService;
+        //private TeamService _teamsService;
 
-        public GroupsController(GroupService groupService, ResultsService resultsService, TeamService teamsService)
+        public GroupsController(GroupService groupService, ResultsService resultsService/*, TeamService teamsService*/)
         {
             _groupsService = groupService;
             _resultsService = resultsService;
-            _teamsService = teamsService;
+            //_teamsService = teamsService;
         }
 
         // GET: api/Groups

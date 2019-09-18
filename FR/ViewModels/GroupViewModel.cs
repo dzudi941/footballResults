@@ -48,13 +48,13 @@ namespace FR.Api.ViewModels
             foreach (var result in results)
             {
                 GroupItemViewModel item = null;
-                if (!items.Exists(x => x.Team == result.HomeTeam.Name))
+                if (!items.Exists(x => x.Team == result.HomeTeam))
                 {
-                    item = new GroupItemViewModel { Team = result.HomeTeam.Name };
+                    item = new GroupItemViewModel { Team = result.HomeTeam };
                 }
-                else if (!items.Exists(x => x.Team == result.AwayTeam.Name))
+                else if (!items.Exists(x => x.Team == result.AwayTeam))
                 {
-                    item = new GroupItemViewModel { Team = result.AwayTeam.Name };
+                    item = new GroupItemViewModel { Team = result.AwayTeam };
                 }
 
                 if (item != null) items.Add(item);
@@ -89,48 +89,48 @@ namespace FR.Api.ViewModels
 
         private int GetGoalsAgainst(string team, ICollection<Result> results)
         {
-            int homeGoalsAgainst = results.Where(x => x.HomeTeam.Name == team).Sum(x => x.AwayTeamGoals);
-            int awayGoalsAgainst = results.Where(x => x.AwayTeam.Name == team).Sum(x => x.HomeTeamGoals);
+            int homeGoalsAgainst = results.Where(x => x.HomeTeam == team).Sum(x => x.AwayTeamGoals);
+            int awayGoalsAgainst = results.Where(x => x.AwayTeam == team).Sum(x => x.HomeTeamGoals);
 
             return homeGoalsAgainst + awayGoalsAgainst;
         }
 
         private int GetDraw(string team, ICollection<Result> results)
         {
-            int drawHome = results.Count(x => x.HomeTeam.Name == team && x.HomeTeamGoals == x.AwayTeamGoals);
-            int drawAway = results.Count(x => x.AwayTeam.Name == team && x.AwayTeamGoals == x.HomeTeamGoals);
+            int drawHome = results.Count(x => x.HomeTeam == team && x.HomeTeamGoals == x.AwayTeamGoals);
+            int drawAway = results.Count(x => x.AwayTeam == team && x.AwayTeamGoals == x.HomeTeamGoals);
 
             return drawHome + drawAway;
         }
 
         private int GetLose(string team, ICollection<Result> results)
         {
-            int loseHome = results.Count(x => x.HomeTeam.Name == team && x.HomeTeamGoals < x.AwayTeamGoals);
-            int loseAway = results.Count(x => x.AwayTeam.Name == team && x.AwayTeamGoals < x.HomeTeamGoals);
+            int loseHome = results.Count(x => x.HomeTeam == team && x.HomeTeamGoals < x.AwayTeamGoals);
+            int loseAway = results.Count(x => x.AwayTeam == team && x.AwayTeamGoals < x.HomeTeamGoals);
 
             return loseHome + loseAway;
         }
 
         private int GetWin(string team, ICollection<Result> results)
         {
-            int winHome = results.Count(x => x.HomeTeam.Name == team && x.HomeTeamGoals > x.AwayTeamGoals);
-            int winAway = results.Count(x => x.AwayTeam.Name == team && x.AwayTeamGoals > x.HomeTeamGoals);
+            int winHome = results.Count(x => x.HomeTeam == team && x.HomeTeamGoals > x.AwayTeamGoals);
+            int winAway = results.Count(x => x.AwayTeam == team && x.AwayTeamGoals > x.HomeTeamGoals);
 
             return winHome + winAway;
         }
 
         private int GetPlayedGames(string team, ICollection<Result> results)
         {
-            int playedGamesHome = results.Count(x => x.HomeTeam.Name == team);
-            int playedGamesAway = results.Count(x => x.AwayTeam.Name == team);
+            int playedGamesHome = results.Count(x => x.HomeTeam == team);
+            int playedGamesAway = results.Count(x => x.AwayTeam == team);
 
             return playedGamesHome + playedGamesAway;
         }
 
         private int GetGoals(string team, ICollection<Result> results)
         {
-            int homeGoals = results.Where(x => x.HomeTeam.Name == team).Sum(x => x.HomeTeamGoals);
-            int awayGoals = results.Where(x => x.AwayTeam.Name == team).Sum(x => x.AwayTeamGoals);
+            int homeGoals = results.Where(x => x.HomeTeam == team).Sum(x => x.HomeTeamGoals);
+            int awayGoals = results.Where(x => x.AwayTeam == team).Sum(x => x.AwayTeamGoals);
 
             return homeGoals + awayGoals;
         }

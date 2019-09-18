@@ -5,7 +5,9 @@ namespace FR.Api.ViewModels
 {
     public class FilterViewModel
     {
-        private DateTime _start = null;
+        private DateTime? _start = null;
+        private DateTime? _end = null;
+
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-ddTHH:mm:ss}")]
         public DateTime Start {
             get
@@ -17,7 +19,7 @@ namespace FR.Api.ViewModels
                 _start = value;
             }
         }
-        private DateTime _end = null;
+        
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-ddTHH:mm:ss}")]
         public DateTime End {
             get

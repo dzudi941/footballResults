@@ -11,13 +11,13 @@ namespace FR.Api.Controllers
     {
         private GroupService _groupService;
         private ResultsService _resultsService;
-        private TeamService _teamService;
+        //private TeamService _teamService;
 
-        public ResultsController(GroupService groupService, ResultsService resultsService, TeamService teamService)
+        public ResultsController(GroupService groupService, ResultsService resultsService/*, TeamService teamService*/)
         {
             _groupService = groupService;
             _resultsService = resultsService;
-            _teamService = teamService;
+            //_teamService = teamService;
         }
 
         // GET: api/Results
@@ -41,10 +41,10 @@ namespace FR.Api.Controllers
             foreach (var resultVM in resultsVM)
             {
                 int groupId = _groupService.AddGroup(resultVM.Group, resultVM.LeagueTitle);
-                int homeTeamId = _teamService.AddTeam(resultVM.HomeTeam);
-                int awayTeamId = _teamService.AddTeam(resultVM.AwayTeam);
+                //int homeTeamId = _teamService.AddTeam(resultVM.HomeTeam);
+                //int awayTeamId = _teamService.AddTeam(resultVM.AwayTeam);
 
-                _resultsService.AddResult(groupId, homeTeamId, awayTeamId, resultVM);
+                _resultsService.AddResult(groupId, resultVM);
             }
 
             return _groupService.GetTables();

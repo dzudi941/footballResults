@@ -8,8 +8,8 @@ namespace FR.Domain.Models
         public string LeagueTitle { get; set; }
         public int Matchday { get; set; }
         public Group Group { get; set; }
-        public Team HomeTeam { get; set; }
-        public Team AwayTeam { get; set; }
+        public string HomeTeam { get; set; }
+        public string AwayTeam { get; set; }
         public DateTime KickoffAt { get; set; }
         public int HomeTeamGoals { get; set; }
         public int AwayTeamGoals { get; set; }

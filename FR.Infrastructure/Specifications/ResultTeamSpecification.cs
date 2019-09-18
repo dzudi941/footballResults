@@ -15,7 +15,7 @@ namespace FR.Infrastructure.Specifications
 
         public override Expression<Func<Result, bool>> ToExpression()
         {
-            return result => string.IsNullOrEmpty(_name) ? true : (result.HomeTeam.Name == _name || result.AwayTeam.Name == _name); 
+            return result => string.IsNullOrEmpty(_name) ? true : (result.HomeTeam == _name || result.AwayTeam == _name); 
         }
     }
 }

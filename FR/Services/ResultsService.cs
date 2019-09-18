@@ -13,16 +13,16 @@ namespace FR.Api.Services
     {
         private readonly IRepository<Result> _resultsRepository;
         private readonly IRepository<Group> _groupRepository;
-        private readonly IRepository<Team> _teamRepository;
+        //private readonly IRepository<Team> _teamRepository;
 
-        public ResultsService(IRepository<Result> resultsRepository, IRepository<Group> groupRepository, IRepository<Team> teamRepository)
+        public ResultsService(IRepository<Result> resultsRepository, IRepository<Group> groupRepository/*, IRepository<Team> teamRepository*/)
         {
             _resultsRepository = resultsRepository;
             _groupRepository = groupRepository;
-            _teamRepository = teamRepository;
+            //_teamRepository = teamRepository;
         }
 
-        internal void AddResult(int groupId, int homeTeamId, int awayTeamId, ResultViewModel resultVM)
+        internal void AddResult(int groupId, ResultViewModel resultVM)
         {
             string[] score = resultVM.Score.Split(':');
             int homeTeamGoals = int.Parse(score[0]);
@@ -33,8 +33,8 @@ namespace FR.Api.Services
                 LeagueTitle = resultVM.LeagueTitle,
                 Matchday = resultVM.Matchday,
                 Group = _groupRepository.Get(groupId),
-                HomeTeam = _teamRepository.Get(homeTeamId),
-                AwayTeam = _teamRepository.Get(awayTeamId),
+                HomeTeam = resultVM.HomeTeam,//_teamRepository.Get(homeTeamId),
+                AwayTeam = resultVM.AwayTeam,//_teamRepository.Get(awayTeamId),
                 KickoffAt = resultVM.KickoffAt,
                 HomeTeamGoals = homeTeamGoals,
                 AwayTeamGoals = awayTeamGoals
@@ -59,8 +59,8 @@ namespace FR.Api.Services
             result.LeagueTitle = resultVM.LeagueTitle;
             result.Matchday = resultVM.Matchday;
             result.Group = _groupRepository.Find(new GroupSpecification(resultVM.Group)).First();
-            result.HomeTeam = _teamRepository.Find(new TeamSpecification(resultVM.HomeTeam)).First();
-            result.AwayTeam = _teamRepository.Find(new TeamSpecification(resultVM.AwayTeam)).First();
+            result.HomeTeam = resultVM.HomeTeam;//_teamRepository.Find(new TeamSpecification(resultVM.HomeTeam)).First();
+            result.AwayTeam = resultVM.AwayTeam;//_teamRepository.Find(new TeamSpecification(resultVM.AwayTeam)).First();
             result.KickoffAt = resultVM.KickoffAt;
             result.HomeTeamGoals = resultVM.HomeTeamGoals;
             result.AwayTeamGoals = resultVM.AwayTeamGoals;
