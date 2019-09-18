@@ -22,32 +22,32 @@ namespace FR.Api.Controllers
 
         // GET: api/Results
         [HttpGet]
-        public IEnumerable<ResultViewModel> Get()
+        public ActionResult<IEnumerable<ResultViewModel>> Get()
         {
-            return _resultsService.Get();
+            return Ok(_resultsService.Get());
         }
 
-        // GET: api/Results/id
         [HttpGet("{id}", Name = "Get")]
-        public ResultViewModel Get(int id)
+        public ActionResult<ResultViewModel> Get(int id)
         {
-            return _resultsService.Get(id);
+            var resultVM = _resultsService.Get(id);
+            if (resultVM == null) return NotFound("Record not found!");
+
+            return Ok(resultVM);
         }
 
         // POST: api/Results
         [HttpPost]
-        public IEnumerable<GroupViewModel> Post(List<ResultViewModel> resultsVM)
+        public ActionResult<IEnumerable<GroupViewModel>> Post(List<ResultViewModel> resultsVM)
         {
             foreach (var resultVM in resultsVM)
             {
                 int groupId = _groupService.AddGroup(resultVM.Group, resultVM.LeagueTitle);
-                //int homeTeamId = _teamService.AddTeam(resultVM.HomeTeam);
-                //int awayTeamId = _teamService.AddTeam(resultVM.AwayTeam);
 
                 _resultsService.AddResult(groupId, resultVM);
             }
 
-            return _groupService.GetTables();
+            return Ok(_groupService.Get());
         }
 
         // PUT: api/Results/5
@@ -57,12 +57,12 @@ namespace FR.Api.Controllers
             _resultsService.Update(id, resultVM);
         }
 
-        // POST: api/Results/
-        [HttpPost]
-        public void PutRange(List<int> ids, List<ResultViewModel> resultsVM)
-        {
-            _resultsService.Update(ids, resultsVM);
-        }
+        //// POST: api/Results/
+        //[HttpPost]
+        //public void PutRange(List<int> ids, List<ResultViewModel> resultsVM)
+        //{
+        //    _resultsService.Update(ids, resultsVM);
+        //}
 
         // DELETE: api/Results/5
         [HttpDelete("{id}")]
@@ -72,10 +72,11 @@ namespace FR.Api.Controllers
         }
 
         // POST: api/Results/Filter
-        [HttpPost]
-        public IEnumerable<GroupViewModel> Filter(FilterViewModel filter)
+        //[Route("api/[controller]/Filter")]
+        [HttpPost("Filter")]
+        public ActionResult<IEnumerable<ResultViewModel>> Filter(FilterViewModel filter)
         {
-            return _resultsService.Filter(filter);
+            return Ok(_resultsService.Filter(filter));
         }
     }
 }

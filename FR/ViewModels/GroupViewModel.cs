@@ -16,6 +16,8 @@ namespace FR.Api.ViewModels
         [DisplayName("standing")]
         public IEnumerable<GroupItemViewModel> Standing { get; set; }
 
+        public GroupViewModel() { }
+
         public GroupViewModel(Group group)
         {
             if (group != null)
@@ -69,6 +71,7 @@ namespace FR.Api.ViewModels
                 item.Lose = GetLose(item.Team, results);
                 item.Draw = GetDraw(item.Team, results);
             }
+
             items.Sort((a, b) => {
                 if (a.Points > b.Points) return 1;
                 else if (a.Points < b.Points) return -1;
@@ -78,6 +81,7 @@ namespace FR.Api.ViewModels
                 else if (a.GoalDifference < b.GoalDifference) return -1;
                 else return 0;
             });
+            items.Reverse();
 
             for (int i = 0; i < items.Count; i++)
             {

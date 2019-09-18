@@ -14,8 +14,7 @@ namespace FR.Infrastructure
         { }
 
         //public DbSet<Tournament> tournaments;
-        public DbSet<Group> groups;
-        public DbSet<Result> results;
-
+        public DbSet<Group> Groups { get; set; }
+        public DbSet<Result> Results { get; set; }
     }
 }

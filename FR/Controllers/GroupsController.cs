@@ -28,16 +28,19 @@ namespace FR.Api.Controllers
 
         // GET: api/Groups
         [HttpGet]
-        public IEnumerable<GroupViewModel> Get()
+        public ActionResult<IEnumerable<GroupViewModel>> Get()
         {
-            return _groupsService.GetTables();
+            return Ok(_groupsService.Get());
         }
 
-        // GET: api/Groups/A
-        [HttpGet("{groupName}", Name = "Get")]
-        public GroupViewModel Get(string groupName)
+
+        [HttpGet("{id}")]
+        public ActionResult<GroupViewModel> Get(string id)
         {
-            return _groupsService.GetTable(groupName);
+            var groupVM = _groupsService.Get(id);
+            if (groupVM == null) return NotFound("Record not found!");
+
+            return  Ok(groupVM);
         }
     }
 }

@@ -6,6 +6,7 @@ using FR.Api.ViewModels;
 using FR.Domain.Interfaces;
 using FR.Domain.Models;
 using FR.Infrastructure.Specifications;
+using Microsoft.EntityFrameworkCore;
 
 namespace FR.Api.Services
 {
@@ -43,14 +44,18 @@ namespace FR.Api.Services
             _resultsRepository.Add(result);
         }
 
-        internal IEnumerable<GroupViewModel> Filter(FilterViewModel filter)
+        internal IEnumerable<ResultViewModel> Filter(FilterViewModel filter)
         {
             IEnumerable<Result> results = _resultsRepository
                 .Find(new ResultDateRangeSpecification(filter.Start, filter.End)
                 .And(new ResultGroupSpecification(filter.Group))
-                .And(new ResultTeamSpecification(filter.Team)));
+                .And(new ResultTeamSpecification(filter.Team)),
+                x=> x.Group);
 
-            return results.GroupBy(x=> x.Group).Select(x => new GroupViewModel(x.Key.Name, x.Key.LeagueTitle, x.ToList()));
+            var aa = results.ToList();
+            var bb = results.GroupBy(x => x.Group);
+
+            return results.Select(x => new ResultViewModel(x));//.GroupBy(x=> x.Group).Select(x => new GroupViewModel(x.Key.Name, x.Key.LeagueTitle, x.ToList()));
         }
 
         public void Update(int id, ResultViewModel resultVM)
@@ -80,12 +85,15 @@ namespace FR.Api.Services
 
         public IEnumerable<ResultViewModel> Get()
         {
-            return _resultsRepository.Get().Select(x => new ResultViewModel(x));
+            return _resultsRepository.Get(x => x.Group).Select(x => new ResultViewModel(x));
         }
 
         public ResultViewModel Get(int id)
         {
-            return new ResultViewModel(_resultsRepository.Get(id));
+            Result result = _resultsRepository.Get(id, x => x.Group);
+            if (result == null) return null;
+
+            return new ResultViewModel(result);
         }
 
         public void Delete(int id)

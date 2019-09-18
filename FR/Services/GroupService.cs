@@ -2,12 +2,13 @@
 using FR.Domain.Interfaces;
 using FR.Domain.Models;
 using FR.Infrastructure.Specifications;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace FR.Api.Services
 {
-    public class GroupService : IGroupService
+    public class GroupService
     {
         private IRepository<Group> _groupRepository;
 
@@ -16,17 +17,18 @@ namespace FR.Api.Services
             _groupRepository = groupRepository;
         }
 
-        public GroupViewModel GetTable(string groupName)
+        public GroupViewModel Get(string groupName)
         {
-            Group group = _groupRepository.Find(new GroupSpecification(groupName)).FirstOrDefault();
+            Group group = _groupRepository.Find(new GroupSpecification(groupName), x=> x.Results).FirstOrDefault();
+            if (group == null) return null;
 
             return new GroupViewModel(group);
         }
 
-        public IEnumerable<GroupViewModel> GetTables()
+        public IEnumerable<GroupViewModel> Get()
         {
             List<GroupViewModel> groupsVM = new List<GroupViewModel>();
-            var groups = _groupRepository.Get();
+            var groups = _groupRepository.Get(x=> x.Results);
 
             return groups.Select(x => new GroupViewModel(x));
         }

@@ -6,7 +6,9 @@ namespace FR.Api.ViewModels
 {
     public class ResultViewModel
     {
+        [NonSerialized]
         private int _homeTeamGoals;
+        [NonSerialized]
         private int _awayTeamGoals;
         public int Id { get; set; }
         public string LeagueTitle { get; set; }
@@ -33,6 +35,8 @@ namespace FR.Api.ViewModels
         public int HomeTeamGoals => _homeTeamGoals;
         public int AwayTeamGoals => _awayTeamGoals;
 
+
+        public ResultViewModel() { }
 
         public ResultViewModel(Result result)
         {

@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using FR.Domain.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace FR.Infrastructure.Repositories
 {
@@ -33,14 +36,29 @@ namespace FR.Infrastructure.Repositories
             _context.SaveChanges();
         }
 
-        public T Get(object id)
+        public T Get(object id, params Expression<Func<T, dynamic>>[] includes)
         {
-            return _context.Find<T>(id);
+            var entry = _context.Find<T>(id);
+            if (entry == null) return null;
+
+            var entityEntry = _context.Entry(entry);
+            foreach (var include in includes)
+            {
+                entityEntry.Reference(include).Load();
+            }
+
+            return entityEntry.Entity;
         }
 
-        public IEnumerable<T> Get()
+        public IEnumerable<T> Get(params Expression<Func<T, dynamic>>[] includes)
         {
-            return _context.Set<T>();
+            IQueryable<T> set = _context.Set<T>();
+            foreach (var include in includes)
+            {
+                set = set.Include(include);
+            }
+
+            return set;
         }
 
         public void Update(T value)
@@ -55,9 +73,16 @@ namespace FR.Infrastructure.Repositories
             GC.SuppressFinalize(this);
         }
 
-        public IEnumerable<T> Find(ISpecification<T> specification)
+        public IEnumerable<T> Find(ISpecification<T> specification, params Expression<Func<T, dynamic>>[] includes)
         {
-            return _context.Set<T>().Where(specification.ToExpression());
+            var expression = specification.ToExpression();
+            IQueryable<T> set = _context.Set<T>();
+            foreach (var include in includes)
+            {
+                set = set.Include(include);
+            }
+
+            return set.Where(expression);
         }
     }
 }
