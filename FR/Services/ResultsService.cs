@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using FR.Api.ViewModels;
 using FR.Domain.Interfaces;
 using FR.Domain.Models;
+using FR.Infrastructure.Specifications;
 
 namespace FR.Api.Services
 {
@@ -20,11 +21,6 @@ namespace FR.Api.Services
             _groupRepository = groupRepository;
             _teamRepository = teamRepository;
         }
-
-        //internal void Add(int groupId, ResultViewModel resultVM)
-        //{
-        //    throw new NotImplementedException();
-        //}
 
         internal void AddResult(int groupId, int homeTeamId, int awayTeamId, ResultViewModel resultVM)
         {
@@ -45,6 +41,56 @@ namespace FR.Api.Services
             };
 
             _resultsRepository.Add(result);
+        }
+
+        internal IEnumerable<GroupViewModel> Filter(FilterViewModel filter)
+        {
+            IEnumerable<Result> results = _resultsRepository
+                .Find(new ResultDateRangeSpecification(filter.Start, filter.End)
+                .And(new ResultGroupSpecification(filter.Group))
+                .And(new ResultTeamSpecification(filter.Team)));
+
+            return results.GroupBy(x=> x.Group).Select(x => new GroupViewModel(x.Key.Name, x.Key.LeagueTitle, x.ToList()));
+        }
+
+        public void Update(int id, ResultViewModel resultVM)
+        {
+            Result result = _resultsRepository.Get(id);
+            result.LeagueTitle = resultVM.LeagueTitle;
+            result.Matchday = resultVM.Matchday;
+            result.Group = _groupRepository.Find(new GroupSpecification(resultVM.Group)).First();
+            result.HomeTeam = _teamRepository.Find(new TeamSpecification(resultVM.HomeTeam)).First();
+            result.AwayTeam = _teamRepository.Find(new TeamSpecification(resultVM.AwayTeam)).First();
+            result.KickoffAt = resultVM.KickoffAt;
+            result.HomeTeamGoals = resultVM.HomeTeamGoals;
+            result.AwayTeamGoals = resultVM.AwayTeamGoals;
+
+            _resultsRepository.Update(result);
+        }
+
+        public void Update(List<int> ids, List<ResultViewModel> resultsVM)
+        {
+            if (ids.Count != resultsVM.Count) return;
+
+            for (int i = 0; i < ids.Count; i++)
+            {
+                Update(ids[i], resultsVM[i]);
+            }
+        }
+
+        public IEnumerable<ResultViewModel> Get()
+        {
+            return _resultsRepository.Get().Select(x => new ResultViewModel(x));
+        }
+
+        public ResultViewModel Get(int id)
+        {
+            return new ResultViewModel(_resultsRepository.Get(id));
+        }
+
+        public void Delete(int id)
+        {
+            _resultsRepository.Remove(_resultsRepository.Get(id));
         }
     }
 }

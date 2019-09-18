@@ -22,16 +22,16 @@ namespace FR.Api.Controllers
 
         // GET: api/Results
         [HttpGet]
-        public IEnumerable<GroupViewModel> Get()
+        public IEnumerable<ResultViewModel> Get()
         {
-            return _groupService.GetTables();
+            return _resultsService.Get();
         }
 
-        // GET: api/Results/A
-        [HttpGet("{groupName}", Name = "Get")]
-        public GroupViewModel Get(string groupName)
+        // GET: api/Results/id
+        [HttpGet("{id}", Name = "Get")]
+        public ResultViewModel Get(int id)
         {
-            return _groupService.GetTable(groupName);
+            return _resultsService.Get(id);
         }
 
         // POST: api/Results
@@ -52,22 +52,30 @@ namespace FR.Api.Controllers
 
         // PUT: api/Results/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public void Put(int id, ResultViewModel resultVM)
         {
+            _resultsService.Update(id, resultVM);
         }
 
-        // DELETE: api/ApiWithActions/5
+        // POST: api/Results/
+        [HttpPost]
+        public void PutRange(List<int> ids, List<ResultViewModel> resultsVM)
+        {
+            _resultsService.Update(ids, resultsVM);
+        }
+
+        // DELETE: api/Results/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
+            _resultsService.Delete(id);
         }
 
-        // GET: api/Results/A
-        [HttpGet("{startDate/endDate/groupName/teamName}", Name = "Filter")]
-        public IEnumerable<GroupViewModel> Filter(string startDate, string endDate, string groupName, string teamName)
+        // POST: api/Results/Filter
+        [HttpPost]
+        public IEnumerable<GroupViewModel> Filter(FilterViewModel filter)
         {
-            //return _groupService.GetTable(groupName);
-            return null;
+            return _resultsService.Filter(filter);
         }
     }
 }
