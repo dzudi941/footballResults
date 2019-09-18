@@ -11,13 +11,13 @@ namespace FR.Api.ViewModels
         [DisplayName("playedGames")]
         public int PlayedGames { get; set; }
         [DisplayName("points")]
-        public int Points { get; set; }
+        public int Points => Win * 3 + Draw;
         [DisplayName("goals")]
         public int Goals { get; set; }
         [DisplayName("goalsAgainst")]
         public int GoalsAgainst { get; set; }
         [DisplayName("goalDifference")]
-        public int GoalDifference { get; set; }
+        public int GoalDifference => Goals - GoalsAgainst;
         [DisplayName("win")]
         public int Win { get; set; }
         [DisplayName("lose")]
