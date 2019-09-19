@@ -1,19 +1,14 @@
-﻿using FR.Domain.Models;
+﻿using FR.Api.Services;
+using FR.Domain.Models;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
 
 namespace FR.Api.ViewModels
 {
     public class GroupViewModel
     {
-        [DisplayName("leagueTitle")]
         public string LeagueTitle { get; set; }
-        [DisplayName("matchday")]
         public int Matchday { get; set; }
-        [DisplayName("group")]
         public string Group { get; set; }
-        [DisplayName("standing")]
         public IEnumerable<GroupItemViewModel> Standing { get; set; }
 
         public GroupViewModel() { }
@@ -22,57 +17,51 @@ namespace FR.Api.ViewModels
         {
             if (group != null)
             {
-                var groupItems = CreateTableItemsFromResults(group.Results);
+                var groupItems = CreateGroupItemsFromResults(group.Results);
                 LeagueTitle = group.LeagueTitle;
                 Group = group.Name;
-                Matchday = GetMatchday(group.Results);
+                Matchday = ResultsService.GetMatchday(group.Results);
                 Standing = groupItems;
             }
         }
 
-        public GroupViewModel(string groupName, string leagueTitle, ICollection<Result> results)
+        public GroupViewModel(string groupName, string leagueTitle, IEnumerable<Result> results)
         {
-            var groupItems = CreateTableItemsFromResults(results);
+            var groupItems = CreateGroupItemsFromResults(results);
             LeagueTitle = leagueTitle;
             Group = groupName;
-            Matchday = GetMatchday(results);
+            Matchday = ResultsService.GetMatchday(results);
             Standing = groupItems;
         }
 
-        private int GetMatchday(ICollection<Result> results)
+        private IEnumerable<GroupItemViewModel> CreateGroupItemsFromResults(IEnumerable<Result> results)
         {
-            return results.Max(x => x.Matchday);
-        }
-
-        private IEnumerable<GroupItemViewModel> CreateTableItemsFromResults(ICollection<Result> results)
-        {
-            List<GroupItemViewModel> items = new List<GroupItemViewModel>();
+            List<GroupItemViewModel> groupItemsVM = new List<GroupItemViewModel>();
             foreach (var result in results)
             {
-                GroupItemViewModel item = null;
-                if (!items.Exists(x => x.Team == result.HomeTeam))
+                if (!groupItemsVM.Exists(x => x.Team == result.HomeTeam))
                 {
-                    item = new GroupItemViewModel { Team = result.HomeTeam };
+                    GroupItemViewModel item = new GroupItemViewModel(result.HomeTeam);
+                    groupItemsVM.Add(item);
                 }
-                else if (!items.Exists(x => x.Team == result.AwayTeam))
+                if (!groupItemsVM.Exists(x => x.Team == result.AwayTeam))
                 {
-                    item = new GroupItemViewModel { Team = result.AwayTeam };
+                    GroupItemViewModel item = new GroupItemViewModel(result.AwayTeam);
+                    groupItemsVM.Add(item);
                 }
-
-                if (item != null) items.Add(item);
             }
 
-            foreach (var item in items)
+            foreach (var item in groupItemsVM)
             {
-                item.PlayedGames = GetPlayedGames(item.Team, results);
-                item.Goals = GetGoals(item.Team, results);
-                item.GoalsAgainst = GetGoalsAgainst(item.Team, results);
-                item.Win = GetWin(item.Team, results);
-                item.Lose = GetLose(item.Team, results);
-                item.Draw = GetDraw(item.Team, results);
+                item.PlayedGames = ResultsService.GetPlayedGames(item.Team, results);
+                item.Goals = ResultsService.GetGoals(item.Team, results);
+                item.GoalsAgainst = ResultsService.GetGoalsAgainst(item.Team, results);
+                item.Win = ResultsService.GetWin(item.Team, results);
+                item.Lose = ResultsService.GetLose(item.Team, results);
+                item.Draw = ResultsService.GetDraw(item.Team, results);
             }
 
-            items.Sort((a, b) => {
+            groupItemsVM.Sort((a, b) => {
                 if (a.Points > b.Points) return 1;
                 else if (a.Points < b.Points) return -1;
                 else if (a.Goals > b.Goals) return 1;
@@ -81,62 +70,14 @@ namespace FR.Api.ViewModels
                 else if (a.GoalDifference < b.GoalDifference) return -1;
                 else return 0;
             });
-            items.Reverse();
+            groupItemsVM.Reverse();
 
-            for (int i = 0; i < items.Count; i++)
+            for (int i = 0; i < groupItemsVM.Count; i++)
             {
-                items[i].Rank = i + 1;
+                groupItemsVM[i].Rank = i + 1;
             }
 
-            return items;
-        }
-
-        private int GetGoalsAgainst(string team, ICollection<Result> results)
-        {
-            int homeGoalsAgainst = results.Where(x => x.HomeTeam == team).Sum(x => x.AwayTeamGoals);
-            int awayGoalsAgainst = results.Where(x => x.AwayTeam == team).Sum(x => x.HomeTeamGoals);
-
-            return homeGoalsAgainst + awayGoalsAgainst;
-        }
-
-        private int GetDraw(string team, ICollection<Result> results)
-        {
-            int drawHome = results.Count(x => x.HomeTeam == team && x.HomeTeamGoals == x.AwayTeamGoals);
-            int drawAway = results.Count(x => x.AwayTeam == team && x.AwayTeamGoals == x.HomeTeamGoals);
-
-            return drawHome + drawAway;
-        }
-
-        private int GetLose(string team, ICollection<Result> results)
-        {
-            int loseHome = results.Count(x => x.HomeTeam == team && x.HomeTeamGoals < x.AwayTeamGoals);
-            int loseAway = results.Count(x => x.AwayTeam == team && x.AwayTeamGoals < x.HomeTeamGoals);
-
-            return loseHome + loseAway;
-        }
-
-        private int GetWin(string team, ICollection<Result> results)
-        {
-            int winHome = results.Count(x => x.HomeTeam == team && x.HomeTeamGoals > x.AwayTeamGoals);
-            int winAway = results.Count(x => x.AwayTeam == team && x.AwayTeamGoals > x.HomeTeamGoals);
-
-            return winHome + winAway;
-        }
-
-        private int GetPlayedGames(string team, ICollection<Result> results)
-        {
-            int playedGamesHome = results.Count(x => x.HomeTeam == team);
-            int playedGamesAway = results.Count(x => x.AwayTeam == team);
-
-            return playedGamesHome + playedGamesAway;
-        }
-
-        private int GetGoals(string team, ICollection<Result> results)
-        {
-            int homeGoals = results.Where(x => x.HomeTeam == team).Sum(x => x.HomeTeamGoals);
-            int awayGoals = results.Where(x => x.AwayTeam == team).Sum(x => x.AwayTeamGoals);
-
-            return homeGoals + awayGoals;
+            return groupItemsVM;
         }
     }
 }

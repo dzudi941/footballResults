@@ -2,7 +2,7 @@
 
 namespace FR.Domain.Models
 {
-    public class Result: IEquatable<Result>
+    public class Result
     {
         public int Id { get; set; }
         public string LeagueTitle { get; set; }
@@ -13,10 +13,5 @@ namespace FR.Domain.Models
         public DateTime KickoffAt { get; set; }
         public int HomeTeamGoals { get; set; }
         public int AwayTeamGoals { get; set; }
-
-        public bool Equals(Result other)
-        {
-            return true;
-        }
     }
 }

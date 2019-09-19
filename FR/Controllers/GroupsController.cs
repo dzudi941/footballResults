@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using FR.Api.Services;
 using FR.Api.ViewModels;
-using FR.Domain.Interfaces;
-using FR.Domain.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FR.Api.Controllers
@@ -15,15 +9,11 @@ namespace FR.Api.Controllers
     [ApiController]
     public class GroupsController : ControllerBase
     {
-        private GroupService _groupsService;
-        private ResultsService _resultsService;
-        //private TeamService _teamsService;
+        private readonly GroupService _groupsService;
 
-        public GroupsController(GroupService groupService, ResultsService resultsService/*, TeamService teamsService*/)
+        public GroupsController(GroupService groupService)
         {
             _groupsService = groupService;
-            _resultsService = resultsService;
-            //_teamsService = teamsService;
         }
 
         // GET: api/Groups
@@ -32,7 +22,6 @@ namespace FR.Api.Controllers
         {
             return Ok(_groupsService.Get());
         }
-
 
         [HttpGet("{id}")]
         public ActionResult<GroupViewModel> Get(string id)

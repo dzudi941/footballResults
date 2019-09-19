@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using FR.Api.ViewModels;
 using FR.Domain.Interfaces;
 using FR.Domain.Models;
 using FR.Infrastructure.Specifications;
-using Microsoft.EntityFrameworkCore;
 
 namespace FR.Api.Services
 {
@@ -14,13 +11,11 @@ namespace FR.Api.Services
     {
         private readonly IRepository<Result> _resultsRepository;
         private readonly IRepository<Group> _groupRepository;
-        //private readonly IRepository<Team> _teamRepository;
 
-        public ResultsService(IRepository<Result> resultsRepository, IRepository<Group> groupRepository/*, IRepository<Team> teamRepository*/)
+        public ResultsService(IRepository<Result> resultsRepository, IRepository<Group> groupRepository)
         {
             _resultsRepository = resultsRepository;
             _groupRepository = groupRepository;
-            //_teamRepository = teamRepository;
         }
 
         internal int AddResult(int groupId, ResultViewModel resultVM)
@@ -75,14 +70,21 @@ namespace FR.Api.Services
             return _resultsRepository.Update(result) > 0;
         }
 
-        public void Update(List<int> ids, List<ResultViewModel> resultsVM)
+        public bool Update(List<ResultViewModel> resultsVM)
         {
-            //if (ids.Count != resultsVM.Count) return;
+            bool updated = true;
+            foreach (var resultVM in resultsVM)
+            {
+                var group = _groupRepository.Find(new GroupSpecification(resultVM.Group)).FirstOrDefault();
+                if (group == null)
+                {
+                    group = new Group { Name = resultVM.Group, LeagueTitle = resultVM.LeagueTitle };
+                    _groupRepository.Add(group);
+                }
+                updated = updated && Update(resultVM.Id, group.Id, resultVM);
+            }
 
-            //for (int i = 0; i < ids.Count; i++)
-            //{
-            //    Update(ids[i], resultsVM[i]);
-            //}
+            return updated;
         }
 
         public IEnumerable<ResultViewModel> Get()
@@ -100,7 +102,67 @@ namespace FR.Api.Services
 
         public bool Delete(int id)
         {
-            return _resultsRepository.Remove(_resultsRepository.Get(id)) > 0;
+            var result = _resultsRepository.Get(id);
+            if (result == null) return false;
+
+            return _resultsRepository.Remove(result) > 0;
         }
+
+        #region Static methods
+        public static int GetMatchday(IEnumerable<Result> results)
+        {
+            if (results.Count() == 0) return 0;
+
+            return results.Max(x => x.Matchday);
+        }
+
+        public static int GetGoalsAgainst(string team, IEnumerable<Result> results)
+        {
+            int homeGoalsAgainst = results.Where(x => x.HomeTeam == team).Sum(x => x.AwayTeamGoals);
+            int awayGoalsAgainst = results.Where(x => x.AwayTeam == team).Sum(x => x.HomeTeamGoals);
+
+            return homeGoalsAgainst + awayGoalsAgainst;
+        }
+
+        public static int GetDraw(string team, IEnumerable<Result> results)
+        {
+            int drawHome = results.Count(x => x.HomeTeam == team && x.HomeTeamGoals == x.AwayTeamGoals);
+            int drawAway = results.Count(x => x.AwayTeam == team && x.AwayTeamGoals == x.HomeTeamGoals);
+
+            return drawHome + drawAway;
+        }
+
+        public static int GetLose(string team, IEnumerable<Result> results)
+        {
+            int loseHome = results.Count(x => x.HomeTeam == team && x.HomeTeamGoals < x.AwayTeamGoals);
+            int loseAway = results.Count(x => x.AwayTeam == team && x.AwayTeamGoals < x.HomeTeamGoals);
+
+            return loseHome + loseAway;
+        }
+
+        public static int GetWin(string team, IEnumerable<Result> results)
+        {
+            int winHome = results.Count(x => x.HomeTeam == team && x.HomeTeamGoals > x.AwayTeamGoals);
+            int winAway = results.Count(x => x.AwayTeam == team && x.AwayTeamGoals > x.HomeTeamGoals);
+
+            return winHome + winAway;
+        }
+
+        public static int GetPlayedGames(string team, IEnumerable<Result> results)
+        {
+            int playedGamesHome = results.Count(x => x.HomeTeam == team);
+            int playedGamesAway = results.Count(x => x.AwayTeam == team);
+
+            return playedGamesHome + playedGamesAway;
+        }
+
+        public static int GetGoals(string team, IEnumerable<Result> results)
+        {
+            int homeGoals = results.Where(x => x.HomeTeam == team).Sum(x => x.HomeTeamGoals);
+            int awayGoals = results.Where(x => x.AwayTeam == team).Sum(x => x.AwayTeamGoals);
+
+            return homeGoals + awayGoals;
+        }
+        #endregion
     }
 }

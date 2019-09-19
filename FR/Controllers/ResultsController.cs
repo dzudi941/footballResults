@@ -40,10 +40,10 @@ namespace FR.Api.Controllers
         public ActionResult<IEnumerable<GroupViewModel>> Post(ResultViewModel resultVM)
         {
             int groupId = _groupService.AddGroup(resultVM.Group, resultVM.LeagueTitle);
-            bool sucessfulyAdded = _resultsService.AddResult(groupId, resultVM) > 0;
+            bool successfullyAdded = _resultsService.AddResult(groupId, resultVM) > 0;
             var groupsVM = _groupService.Get();
 
-            return sucessfulyAdded ? (ActionResult)Ok(groupsVM) : BadRequest();
+            return successfullyAdded ? (ActionResult)Ok(groupsVM) : BadRequest();
         }
 
         // POST: api/Results/Multiple
@@ -73,12 +73,14 @@ namespace FR.Api.Controllers
             return updated ? (ActionResult)Ok() : BadRequest();
         }
 
-        //// POST: api/Results/
-        //[HttpPost]
-        //public void PutRange(List<int> ids, List<ResultViewModel> resultsVM)
-        //{
-        //    _resultsService.Update(ids, resultsVM);
-        //}
+        //// POST: api/Results/PutMultiple
+        [HttpPost("PutMultiple")]
+        public ActionResult PutMultiple(List<ResultViewModel> resultsVM)
+        {
+            bool updated = _resultsService.Update(resultsVM);
+
+            return updated ? (ActionResult)Ok() : BadRequest();
+        }
 
         // DELETE: api/Results/5
         [HttpDelete("{id}")]

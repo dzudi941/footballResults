@@ -10,12 +10,10 @@ namespace FR.Infrastructure.Specifications
     public class GroupSpecification : Specification<Group>
     {
         private readonly string _name;
-        //private readonly string _tournamentName;
 
         public GroupSpecification(string name)
         {
             _name = name;
-            //_tournamentName = tournamentName;
         }
 
         public override Expression<Func<Group, bool>> ToExpression()

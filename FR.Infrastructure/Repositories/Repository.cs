@@ -67,12 +67,6 @@ namespace FR.Infrastructure.Repositories
             return _context.SaveChanges();
         }
 
-        public void Dispose()
-        {
-            _context.Dispose();
-            GC.SuppressFinalize(this);
-        }
-
         public IEnumerable<T> Find(ISpecification<T> specification, params Expression<Func<T, dynamic>>[] includes)
         {
             var expression = specification.ToExpression();
@@ -83,6 +77,12 @@ namespace FR.Infrastructure.Repositories
             }
 
             return set.Where(expression);
+        }
+
+        public void Dispose()
+        {
+            _context.Dispose();
+            GC.SuppressFinalize(this);
         }
     }
 }
