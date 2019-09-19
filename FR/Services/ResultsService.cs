@@ -53,14 +53,21 @@ namespace FR.Api.Services
             return results.Select(x => new ResultViewModel(x));
         }
 
-        public bool Update(int id, int groupId, ResultViewModel resultVM)
+        public bool Update(int id, ResultViewModel resultVM)
         {
             Result result = _resultsRepository.Get(id);
             if (result == null) return false;
 
+            var group = _groupRepository.Find(new GroupSpecification(resultVM.Group)).FirstOrDefault();
+            if (group == null)
+            {
+                group = new Group { Name = resultVM.Group, LeagueTitle = resultVM.LeagueTitle };
+                _groupRepository.Add(group);
+            }
+
             result.LeagueTitle = resultVM.LeagueTitle;
             result.Matchday = resultVM.Matchday;
-            result.Group = _groupRepository.Get(groupId);
+            result.Group = group;
             result.HomeTeam = resultVM.HomeTeam;
             result.AwayTeam = resultVM.AwayTeam;
             result.KickoffAt = resultVM.KickoffAt;
@@ -75,13 +82,7 @@ namespace FR.Api.Services
             bool updated = true;
             foreach (var resultVM in resultsVM)
             {
-                var group = _groupRepository.Find(new GroupSpecification(resultVM.Group)).FirstOrDefault();
-                if (group == null)
-                {
-                    group = new Group { Name = resultVM.Group, LeagueTitle = resultVM.LeagueTitle };
-                    _groupRepository.Add(group);
-                }
-                updated = updated && Update(resultVM.Id, group.Id, resultVM);
+                updated = updated && Update(resultVM.Id, resultVM);
             }
 
             return updated;

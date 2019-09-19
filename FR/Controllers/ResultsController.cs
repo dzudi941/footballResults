@@ -67,13 +67,12 @@ namespace FR.Api.Controllers
         [HttpPut("{id}")]
         public ActionResult Put(int id, ResultViewModel resultVM)
         {
-            int groupId = _groupService.AddGroup(resultVM.Group, resultVM.LeagueTitle);
-            bool updated = _resultsService.Update(id, groupId, resultVM);
+            bool updated = _resultsService.Update(id, resultVM);
 
             return updated ? (ActionResult)Ok() : BadRequest();
         }
 
-        //// POST: api/Results/PutMultiple
+        // POST: api/Results/PutMultiple
         [HttpPost("PutMultiple")]
         public ActionResult PutMultiple(List<ResultViewModel> resultsVM)
         {
