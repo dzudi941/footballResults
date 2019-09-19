@@ -18,12 +18,8 @@ namespace FR.Api.Services
             _groupRepository = groupRepository;
         }
 
-        internal int AddResult(int groupId, ResultViewModel resultVM)
+        internal bool AddResult(int groupId, ResultViewModel resultVM)
         {
-            string[] score = resultVM.Score.Split(':');
-            int homeTeamGoals = int.Parse(score[0]);
-            int awayTeamGoals = int.Parse(score[1]);
-
             Result result = new Result
             {
                 LeagueTitle = resultVM.LeagueTitle,
@@ -32,11 +28,11 @@ namespace FR.Api.Services
                 HomeTeam = resultVM.HomeTeam,
                 AwayTeam = resultVM.AwayTeam,
                 KickoffAt = resultVM.KickoffAt,
-                HomeTeamGoals = homeTeamGoals,
-                AwayTeamGoals = awayTeamGoals
+                HomeTeamGoals = resultVM.HomeTeamGoals(),
+                AwayTeamGoals = resultVM.AwayTeamGoals()
             };
 
-            return _resultsRepository.Add(result);
+            return _resultsRepository.Add(result) > 0;
         }
 
         internal IEnumerable<ResultViewModel> Filter(FilterViewModel filter)

@@ -40,7 +40,7 @@ namespace FR.Api.Controllers
         public ActionResult<IEnumerable<GroupViewModel>> Post(ResultViewModel resultVM)
         {
             int groupId = _groupService.AddGroup(resultVM.Group, resultVM.LeagueTitle);
-            bool successfullyAdded = _resultsService.AddResult(groupId, resultVM) > 0;
+            bool successfullyAdded = _resultsService.AddResult(groupId, resultVM);
             var groupsVM = _groupService.Get();
 
             return successfullyAdded ? (ActionResult)Ok(groupsVM) : BadRequest();
@@ -50,15 +50,14 @@ namespace FR.Api.Controllers
         [HttpPost("Multiple")]
         public ActionResult<IEnumerable<GroupViewModel>> Post(List<ResultViewModel> resultsVM)
         {
-            int totalAddedResults = 0;
+            bool allAdded = true;
             foreach (var resultVM in resultsVM)
             {
                 int groupId = _groupService.AddGroup(resultVM.Group, resultVM.LeagueTitle);
-                totalAddedResults += _resultsService.AddResult(groupId, resultVM);
+                allAdded = allAdded && _resultsService.AddResult(groupId, resultVM);
             }
 
             var groupsVM = _groupService.Get();
-            bool allAdded = totalAddedResults == resultsVM.Count;
 
             return allAdded ? (ActionResult)Ok(groupsVM) : BadRequest();
         }
@@ -74,7 +73,7 @@ namespace FR.Api.Controllers
 
         // POST: api/Results/PutMultiple
         [HttpPost("PutMultiple")]
-        public ActionResult PutMultiple(List<ResultViewModel> resultsVM)
+        public ActionResult Put(List<ResultViewModel> resultsVM)
         {
             bool updated = _resultsService.Update(resultsVM);
 

@@ -1,0 +1,313 @@
+{
+	"info": {
+		"_postman_id": "9ab010a3-8111-4ad1-ab77-81ebf965942b",
+		"name": "HTEC",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "http://localhost:50968/api/results/",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"leagueTitle\": \"Champions league 2016/17\",\r\n    \"matchday\": 1,\r\n    \"group\": \"A\",\r\n    \"homeTeam\": \"PSG\",\r\n    \"awayTeam\": \"Arsenal\",\r\n    \"kickoffAt\": \"2017-09-13T20:45:00\",\r\n    \"score\": \"1:1\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:50968/api/results/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "50968",
+					"path": [
+						"api",
+						"results",
+						""
+					]
+				},
+				"description": "Post one result."
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:50968/api/results/multiple/",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[\r\n    {\r\n        \"leagueTitle\": \"Champions league 2016/17\",\r\n        \"matchday\": 1,\r\n        \"group\": \"A\",\r\n        \"homeTeam\": \"PSG\",\r\n        \"awayTeam\": \"Arsenal\",\r\n        \"kickoffAt\": \"2017-09-13T20:45:00\",\r\n        \"score\": \"1:1\"\r\n    },\r\n    {\r\n        \"leagueTitle\": \"Champions league 2016/17\",\r\n        \"matchday\": 1,\r\n        \"group\": \"A\",\r\n        \"homeTeam\": \"Basel\",\r\n        \"awayTeam\": \"Ludogorets\",\r\n        \"kickoffAt\": \"2017-09-13T20:45:00\",\r\n        \"score\": \"1:1\"\r\n    },\r\n    {\r\n        \"leagueTitle\": \"Champions league 2016/17\",\r\n        \"matchday\": 2,\r\n        \"group\": \"A\",\r\n        \"homeTeam\": \"Arsenal\",\r\n        \"awayTeam\": \"Basel\",\r\n        \"kickoffAt\": \"2017-09-28T20:45:00\",\r\n        \"score\": \"2:0\"\r\n    },\r\n    {\r\n        \"leagueTitle\": \"Champions league 2016/17\",\r\n        \"matchday\": 2,\r\n        \"group\": \"A\",\r\n        \"homeTeam\": \"Ludogorets\",\r\n        \"awayTeam\": \"PSG\",\r\n        \"kickoffAt\": \"2017-09-28T20:45:00\",\r\n        \"score\": \"1:3\"\r\n    },\r\n    {\r\n        \"leagueTitle\": \"Champions league 2016/17\",\r\n        \"matchday\": 1,\r\n        \"group\": \"A\",\r\n        \"homeTeam\": \"Arsenal\",\r\n        \"awayTeam\": \"Ludogorets\",\r\n        \"kickoffAt\": \"2017-10-19T20:45:00\",\r\n        \"score\": \"6:0\"\r\n    },\r\n    {\r\n        \"leagueTitle\": \"Champions league 2016/17\",\r\n        \"matchday\": 1,\r\n        \"group\": \"A\",\r\n        \"homeTeam\": \"PSG\",\r\n        \"awayTeam\": \"Basel\",\r\n        \"kickoffAt\": \"2017-10-19T20:45:00\",\r\n        \"score\": \"3:0\"\r\n    },\r\n    {\r\n        \"leagueTitle\": \"Champions league 2016/17\",\r\n        \"matchday\": 1,\r\n        \"group\": \"A\",\r\n        \"homeTeam\": \"Ludogorets\",\r\n        \"awayTeam\": \"Arsenal\",\r\n        \"kickoffAt\": \"2017-11-01T20:45:00\",\r\n        \"score\": \"2:3\"\r\n    },\r\n    {\r\n        \"leagueTitle\": \"Champions league 2016/17\",\r\n        \"matchday\": 1,\r\n        \"group\": \"A\",\r\n        \"homeTeam\": \"PSG\",\r\n        \"awayTeam\": \"Basel\",\r\n        \"kickoffAt\": \"2017-11-01T20:45:00\",\r\n        \"score\": \"1:2\"\r\n    },\r\n    {\r\n        \"leagueTitle\": \"Champions league 2016/17\",\r\n        \"matchday\": 1,\r\n        \"group\": \"A\",\r\n        \"homeTeam\": \"Arsenal\",\r\n        \"awayTeam\": \"PSG\",\r\n        \"kickoffAt\": \"2017-11-23T20:45:00\",\r\n        \"score\": \"2:2\"\r\n    },\r\n    {\r\n        \"leagueTitle\": \"Champions league 2016/17\",\r\n        \"matchday\": 1,\r\n        \"group\": \"A\",\r\n        \"homeTeam\": \"Ludogorets\",\r\n        \"awayTeam\": \"Basel\",\r\n        \"kickoffAt\": \"2017-11-23T20:45:00\",\r\n        \"score\": \"0:0\"\r\n    },\r\n    {\r\n        \"leagueTitle\": \"Champions league 2016/17\",\r\n        \"matchday\": 1,\r\n        \"group\": \"A\",\r\n        \"homeTeam\": \"Basel\",\r\n        \"awayTeam\": \"Arsenal\",\r\n        \"kickoffAt\": \"2017-12-07T20:45:00\",\r\n        \"score\": \"1:4\"\r\n    },\r\n    {\r\n        \"leagueTitle\": \"Champions league 2016/17\",\r\n        \"matchday\": 1,\r\n        \"group\": \"A\",\r\n        \"homeTeam\": \"PSG\",\r\n        \"awayTeam\": \"Ludogorets\",\r\n        \"kickoffAt\": \"2017-12-07T20:45:00\",\r\n        \"score\": \"2:2\"\r\n    }\r\n]\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:50968/api/results/multiple/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "50968",
+					"path": [
+						"api",
+						"results",
+						"multiple",
+						""
+					]
+				},
+				"description": "Post multiple results."
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:50968/api/results/",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:50968/api/results/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "50968",
+					"path": [
+						"api",
+						"results",
+						""
+					]
+				},
+				"description": "Get all results."
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:50968/api/results/15",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:50968/api/results/15",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "50968",
+					"path": [
+						"api",
+						"results",
+						"15"
+					]
+				},
+				"description": "Get one result by id."
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:50968/api/results/filter/",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"start\":\"2017-11-13T20:45:00\",\n\t\"end\":\"2018-09-13T20:45:00\",\n\t\"group\": \"A\",\n\t\"team\": \"Arsenal\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:50968/api/results/filter/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "50968",
+					"path": [
+						"api",
+						"results",
+						"filter",
+						""
+					]
+				},
+				"description": "Filter results."
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:50968/api/results/",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"leagueTitle\": \"Champions league 2016/17\",\r\n    \"matchday\": 1,\r\n    \"group\": \"C\",\r\n    \"homeTeam\": \"Basel\",\r\n    \"awayTeam\": \"Ludogorets\",\r\n    \"kickoffAt\": \"2017-09-13T20:45:00\",\r\n    \"score\": \"2:1\",\r\n    \"homeTeamGoals\": 1,\r\n    \"awayTeamGoals\": 1\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:50968/api/results/15",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "50968",
+					"path": [
+						"api",
+						"results",
+						"15"
+					]
+				},
+				"description": "Update one result."
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:50968/api/results/putmultiple/",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[\r\n\t{\r\n        \"id\": 16,\r\n        \"leagueTitle\": \"Champions league 2016/17\",\r\n        \"matchday\": 2,\r\n        \"group\": \"D\",\r\n        \"homeTeam\": \"Arsenal\",\r\n        \"awayTeam\": \"Basel\",\r\n        \"kickoffAt\": \"2017-09-28T20:45:00\",\r\n        \"score\": \"2:0\",\r\n        \"homeTeamGoals\": 2,\r\n        \"awayTeamGoals\": 0\r\n    },\r\n    {\r\n        \"id\": 17,\r\n        \"leagueTitle\": \"Champions league 2016/17\",\r\n        \"matchday\": 2,\r\n        \"group\": \"D\",\r\n        \"homeTeam\": \"Ludogorets\",\r\n        \"awayTeam\": \"PSG\",\r\n        \"kickoffAt\": \"2017-09-28T20:45:00\",\r\n        \"score\": \"1:3\",\r\n        \"homeTeamGoals\": 1,\r\n        \"awayTeamGoals\": 3\r\n    }\r\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:50968/api/results/putmultiple/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "50968",
+					"path": [
+						"api",
+						"results",
+						"putmultiple",
+						""
+					]
+				},
+				"description": "Update multiple results at one."
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:50968/api/results/14",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:50968/api/results/14",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "50968",
+					"path": [
+						"api",
+						"results",
+						"14"
+					]
+				},
+				"description": "Delete result."
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:50968/api/groups/",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:50968/api/groups/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "50968",
+					"path": [
+						"api",
+						"groups",
+						""
+					]
+				},
+				"description": "Get all groups."
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:50968/api/groups/A",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:50968/api/groups/A",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "50968",
+					"path": [
+						"api",
+						"groups",
+						"A"
+					]
+				},
+				"description": "Get one group by name."
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
