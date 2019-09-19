@@ -23,6 +23,7 @@ namespace FR.Api.Controllers
             return Ok(_groupsService.Get());
         }
 
+        // GET: api/Groups/5
         [HttpGet("{id}")]
         public ActionResult<GroupViewModel> Get(string id)
         {

@@ -30,8 +30,8 @@ namespace FR.Api.ViewModels
             }
         }
 
-        public int HomeTeamGoals => _homeTeamGoals;
-        public int AwayTeamGoals => _awayTeamGoals;
+        public int HomeTeamGoals() => _homeTeamGoals;
+        public int AwayTeamGoals() => _awayTeamGoals;
 
 
         public ResultViewModel() { }

@@ -29,8 +29,8 @@ namespace FR.Api.Services
                 LeagueTitle = resultVM.LeagueTitle,
                 Matchday = resultVM.Matchday,
                 Group = _groupRepository.Get(groupId),
-                HomeTeam = resultVM.HomeTeam,//_teamRepository.Get(homeTeamId),
-                AwayTeam = resultVM.AwayTeam,//_teamRepository.Get(awayTeamId),
+                HomeTeam = resultVM.HomeTeam,
+                AwayTeam = resultVM.AwayTeam,
                 KickoffAt = resultVM.KickoffAt,
                 HomeTeamGoals = homeTeamGoals,
                 AwayTeamGoals = awayTeamGoals
@@ -50,7 +50,7 @@ namespace FR.Api.Services
             var aa = results.ToList();
             var bb = results.GroupBy(x => x.Group);
 
-            return results.Select(x => new ResultViewModel(x));//.GroupBy(x=> x.Group).Select(x => new GroupViewModel(x.Key.Name, x.Key.LeagueTitle, x.ToList()));
+            return results.Select(x => new ResultViewModel(x));
         }
 
         public bool Update(int id, int groupId, ResultViewModel resultVM)
@@ -61,11 +61,11 @@ namespace FR.Api.Services
             result.LeagueTitle = resultVM.LeagueTitle;
             result.Matchday = resultVM.Matchday;
             result.Group = _groupRepository.Get(groupId);
-            result.HomeTeam = resultVM.HomeTeam;//_teamRepository.Find(new TeamSpecification(resultVM.HomeTeam)).First();
-            result.AwayTeam = resultVM.AwayTeam;//_teamRepository.Find(new TeamSpecification(resultVM.AwayTeam)).First();
+            result.HomeTeam = resultVM.HomeTeam;
+            result.AwayTeam = resultVM.AwayTeam;
             result.KickoffAt = resultVM.KickoffAt;
-            result.HomeTeamGoals = resultVM.HomeTeamGoals;
-            result.AwayTeamGoals = resultVM.AwayTeamGoals;
+            result.HomeTeamGoals = resultVM.HomeTeamGoals();
+            result.AwayTeamGoals = resultVM.AwayTeamGoals();
 
             return _resultsRepository.Update(result) > 0;
         }
